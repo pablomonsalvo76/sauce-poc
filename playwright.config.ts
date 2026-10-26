@@ -1,7 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import dotenv from 'dotenv';
-
-dotenv.config({ quiet: true });
+import { env } from './test-data';
 
 const isCI = Boolean(process.env.CI);
 
@@ -15,7 +13,7 @@ export default defineConfig({
   retries: isCI ? 1 : 0,
   reporter: [['html'], ['allure-playwright', { resultsDir: 'allure-results' }]],
   use: {
-    baseURL: process.env.BASE_URL,
+    baseURL: env.baseUrl,
     testIdAttribute: 'data-test',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
