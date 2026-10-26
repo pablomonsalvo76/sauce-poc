@@ -1,0 +1,27 @@
+{
+  "name": "poc-saucedemo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "POC de automatización sobre saucedemo.com con Playwright Test + TypeScript",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "report": "allure generate allure-results --clean -o allure-report && allure open allure-report",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.62.0",
+    "@types/node": "22.20.5",
+    "allure-js-commons": "3.14.0",
+    "allure-playwright": "3.14.0",
+    "dotenv": "18.0.9",
+    "eslint": "10.13.0",
+    "eslint-plugin-playwright": "2.12.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.1"
+  }
+}
