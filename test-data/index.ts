@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import checkoutJson from './checkout.json';
 import messagesJson from './messages.json';
+import routesJson from './routes.json';
 import usersJson from './users.json';
 
 dotenv.config({ quiet: true });
@@ -73,6 +74,9 @@ export const usuarios: Record<keyof typeof usersJson, Usuario> = {
 export const checkout: DatosCheckout = checkoutJson;
 
 export const mensajes: Mensajes = messagesJson;
+
+/** Rutas relativas a BASE_URL. */
+export const rutas: Readonly<typeof routesJson> = routesJson;
 
 /** Casos negativos de login (TC02, TC03) para iterar en los tests. */
 export const casosLoginNegativos: readonly CasoLoginNegativo[] = [
