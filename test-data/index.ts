@@ -40,7 +40,6 @@ export interface CasoLoginExitoso {
   id: string;
   descripcion: string;
   usuario: Usuario;
-  tags: string[];
 }
 
 /** Caso negativo de login generado a partir de los datos. */
@@ -79,8 +78,10 @@ export const usuarios: Record<keyof typeof usersJson, Usuario> = {
   performanceGlitch: { ...usersJson.performanceGlitch, password: env.sauceClave },
 };
 
+/** Datos del cliente y producto para la compra (TC04). */
 export const checkout: DatosCheckout = checkoutJson;
 
+/** Textos esperados en las validaciones. */
 export const mensajes: Mensajes = messagesJson;
 
 /** Rutas relativas a BASE_URL. */
@@ -92,13 +93,11 @@ export const casosLoginExitoso: readonly CasoLoginExitoso[] = [
     id: 'TC01',
     descripcion: 'Login exitoso con usuario estándar',
     usuario: usuarios.standard,
-    tags: ['@smoke', '@regression'],
   },
   {
     id: 'TC01',
     descripcion: 'Login exitoso con usuario lento (performance_glitch_user)',
     usuario: usuarios.performanceGlitch,
-    tags: ['@regression'],
   },
 ];
 

@@ -8,7 +8,7 @@ const FEATURE = 'Login';
 
 test.describe('Login', () => {
   for (const caso of casosLoginExitoso) {
-    test(`${caso.id} ${caso.descripcion}`, { tag: caso.tags }, async ({ loginPage, inventarioPage }) => {
+    test(`${caso.id} ${caso.descripcion}`, { tag: ['@smoke', '@regression'] }, async ({ loginPage, inventarioPage }) => {
       await allure.epic(EPIC);
       await allure.feature(FEATURE);
       await allure.severity(allure.Severity.BLOCKER);
