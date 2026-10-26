@@ -35,6 +35,14 @@ export interface Mensajes {
   orderConfirmation: string;
 }
 
+/** Caso de login exitoso generado a partir de los datos. */
+export interface CasoLoginExitoso {
+  id: string;
+  descripcion: string;
+  usuario: Usuario;
+  tags: string[];
+}
+
 /** Caso negativo de login generado a partir de los datos. */
 export interface CasoLoginNegativo {
   id: string;
@@ -77,6 +85,22 @@ export const mensajes: Mensajes = messagesJson;
 
 /** Rutas relativas a BASE_URL. */
 export const rutas: Readonly<typeof routesJson> = routesJson;
+
+/** Casos de login exitoso (TC01) para iterar en los tests. */
+export const casosLoginExitoso: readonly CasoLoginExitoso[] = [
+  {
+    id: 'TC01',
+    descripcion: 'Login exitoso con usuario estándar',
+    usuario: usuarios.standard,
+    tags: ['@smoke', '@regression'],
+  },
+  {
+    id: 'TC01',
+    descripcion: 'Login exitoso con usuario lento (performance_glitch_user)',
+    usuario: usuarios.performanceGlitch,
+    tags: ['@regression'],
+  },
+];
 
 /** Casos negativos de login (TC02, TC03) para iterar en los tests. */
 export const casosLoginNegativos: readonly CasoLoginNegativo[] = [
