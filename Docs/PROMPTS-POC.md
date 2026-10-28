@@ -1,6 +1,6 @@
 # POC Playwright + IA — Guía de prompts (Punto 1: proyecto funcionando)
 
-Sitio: **https://www.saucedemo.com** · Stack: **Playwright Test + TypeScript** · Entrega interna: **miércoles 28/10/26** (el equipo entrega el jueves 29/10)
+Sitio: **https://www.saucedemo.com** · Stack: **Playwright Test + TypeScript** ·
 
 **Alcance:** esta guía cubre solo el **entregable 1**, es decir, el código funcionando. El reporte Allure, el análisis y el documento los hacen tus compañeros, pero vos les dejás todo listo para que puedan hacerlo (ver [Qué le pasás al equipo](#qué-le-pasás-al-equipo)).
 
@@ -368,11 +368,3 @@ Guardá la respuesta de la IA como insumo del documento (entregable 4) y anotá 
 - [ ] Commits `ia:` y `fix manual:` por cada paso; Registro de tiempos completo
 - [ ] `allure-results/` se genera en cada ejecución
 - [ ] `package-lock.json` versionado; repo o `.zip` sin `node_modules`, reportes ni `.env`
-
-## Cronograma
-
-| Día | Trabajo |
-|-----|---------|
-| Lun 26 | Prompts 0–2 |
-| Mar 27 | Prompts 3–5 |
-| Mié 28 | Prompts 6–7, suite en verde (salvo TC05), análisis de resultados y se lo pasás al equipo |
