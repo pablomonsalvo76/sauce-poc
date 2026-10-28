@@ -1,8 +1,8 @@
 import { test as base } from '@playwright/test';
-import { CarritoPage } from '../pages/carrito.page';
-import { CheckoutPage } from '../pages/checkout.page';
-import { InventarioPage } from '../pages/inventario.page';
-import { LoginPage } from '../pages/login.page';
+import { CarritoPage } from '@pages/carrito.page';
+import { CheckoutPage } from '@pages/checkout.page';
+import { InventarioPage } from '@pages/inventario.page';
+import { LoginPage } from '@pages/login.page';
 
 /** Page Objects disponibles en cada test. */
 interface Pages {

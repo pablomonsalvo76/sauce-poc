@@ -1,11 +1,11 @@
 import * as allure from 'allure-js-commons';
-import { expect, test } from '../fixtures/pages.fixture';
-import { iniciarSesion } from '../helpers/login.helper';
-import { checkout, mensajes, usuarios, type Usuario } from '../test-data';
-import type { CarritoPage } from '../pages/carrito.page';
-import type { CheckoutPage } from '../pages/checkout.page';
-import type { InventarioPage } from '../pages/inventario.page';
-import type { LoginPage } from '../pages/login.page';
+import { expect, test } from '@fixtures/pages.fixture';
+import { iniciarSesion } from '@helpers/login.helper';
+import { checkout, mensajes, usuarios, type Usuario } from '@data';
+import type { CarritoPage } from '@pages/carrito.page';
+import type { CheckoutPage } from '@pages/checkout.page';
+import type { InventarioPage } from '@pages/inventario.page';
+import type { LoginPage } from '@pages/login.page';
 
 const EPIC = 'SauceDemo';
 const FEATURE = 'Compra';
@@ -84,7 +84,7 @@ test.describe('Compra', () => {
     await comprarDePuntaAPunta(usuarios.standard, { loginPage, inventarioPage, carritoPage, checkoutPage });
   });
 
-  test('TC05 Compra de punta a punta con problem_user', { tag: '@regression' }, async ({
+  test('TC05 Compra de punta a punta con problem_user', { tag: ['@regression', '@known-bug'] }, async ({
     loginPage,
     inventarioPage,
     carritoPage,

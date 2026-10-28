@@ -1,5 +1,5 @@
-import type { LoginPage } from '../pages/login.page';
-import type { Usuario } from '../test-data';
+import type { LoginPage } from '@pages/login.page';
+import type { Usuario } from '@data';
 
 /**
  * Flujo de login completo: abre la pantalla, ingresa las credenciales y envía el formulario.

@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import type { DatosCliente } from '../test-data';
+import type { DatosCliente } from '@data';
 import { BasePage } from './base.page';
 
 /**

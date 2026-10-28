@@ -10,7 +10,13 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@pages/*": ["./pages/*"],
+      "@fixtures/*": ["./fixtures/*"],
+      "@helpers/*": ["./helpers/*"],
+      "@data": ["./test-data/index.ts"]
+    }
   },
   "include": ["**/*.ts", "scripts/**/*.mts"],
   "exclude": ["node_modules", "test-results", "playwright-report", "allure-results", "allure-report", "resultados"]

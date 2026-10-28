@@ -1,7 +1,7 @@
 import * as allure from 'allure-js-commons';
-import { expect, test } from '../fixtures/pages.fixture';
-import { iniciarSesion } from '../helpers/login.helper';
-import { casosLoginExitoso, casosLoginNegativos, mensajes } from '../test-data';
+import { expect, test } from '@fixtures/pages.fixture';
+import { iniciarSesion } from '@helpers/login.helper';
+import { casosLoginExitoso, casosLoginNegativos, mensajes } from '@data';
 
 const EPIC = 'SauceDemo';
 const FEATURE = 'Login';
