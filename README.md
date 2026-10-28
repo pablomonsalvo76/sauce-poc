@@ -106,6 +106,10 @@ tests/*.spec.ts ──usa──▶ fixtures/pages.fixture.ts ──crea──▶
 - **Selectores estables:** `getByTestId` primero; si no hay test id, `getByRole` y después `getByText`. Nada de XPath
   ni CSS dependiente del layout.
 - **Tests independientes:** cada test hace su propio login y no depende del orden ni de otro test.
+- **Alias de imports:** entre carpetas se usan `@pages/*`, `@fixtures/*`, `@helpers/*` y `@data` (definidos en
+  `tsconfig.json`); dentro de una misma carpeta se importa con `./`.
+- **Bug conocido:** TC05 lleva el tag `@known-bug`. `npm run test:ci` lo excluye para que un pipeline no quede en
+  rojo; `npm test` lo sigue corriendo para el análisis.
 - **Tags literales:** el `tag` de cada test se escribe fijo (`{ tag: ['@smoke', '@regression'] }`); ESLint no acepta
   tags calculados.
 - **Allure:** cada test declara epic, feature y severidad.

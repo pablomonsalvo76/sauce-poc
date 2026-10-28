@@ -1,8 +1,8 @@
 # POC Playwright + IA — Guía de prompts (Punto 1: proyecto funcionando)
 
-Sitio: **https://www.saucedemo.com** · Stack: **Playwright Test + TypeScript** ·
+Sitio: **https://www.saucedemo.com** · Stack: **Playwright Test + TypeScript**
 
-**Alcance:** esta guía cubre solo el **entregable 1**, es decir, el código funcionando. El reporte Allure, el análisis y el documento los hacen tus compañeros, pero vos les dejás todo listo para que puedan hacerlo (ver [Qué le pasás al equipo](#qué-le-pasás-al-equipo)).
+**Alcance:** esta guía cubre el **entregable 1**, es decir, el código funcionando. El reporte Allure, el análisis (Prompt 7) y el documento final se arman a partir de ese proyecto (ver [Entregables](#entregables)).
 
 ---
 
@@ -67,7 +67,6 @@ poc-saucedemo/
 ├── fixtures/         pages.fixture.ts      (inyecta las pages con test.extend)
 ├── helpers/          login.helper.ts       (flujo de login reutilizable)
 ├── test-data/        users.json, checkout.json, messages.json, index.ts (loader tipado)
-├── utils/            actions.ts, assertions.ts (interacciones y validaciones comunes)
 ├── tests/            login.spec.ts, compra.spec.ts
 ├── scripts/          armar-insumo.mts      (arma el insumo del análisis con IA)
 ├── resultados/       resultados.json, insumo-analisis.md (se generan, no se versionan)
@@ -102,8 +101,8 @@ estas reglas OBLIGATORIAS.
 - Los flujos reutilizables (login completo) van en /helpers, no se duplican en los tests.
 
 3. Datos en archivo externo — nada hardcodeado
-- Usuarios, productos y mensajes esperados viven en /test-data/*.json, con un loader tipado
-  (test-data/index.ts). Los datos personales del checkout se generan con Faker (regla 8).
+- Usuarios, productos, datos de checkout y mensajes esperados viven en /test-data/*.json, con un loader tipado
+  (test-data/index.ts).
 - BASE_URL y la contraseña vienen de .env y se leen en un solo lugar; incluir .env.example.
   .env no se versiona.
 - En tests y pages no hay ningún literal de datos, mensajes ni URLs. Los timeouts son
@@ -133,16 +132,11 @@ estas reglas OBLIGATORIAS.
 - Nombres de métodos y pasos en español, como en nuestro repositorio. JSDoc breve en clases
   y métodos públicos.
 
-8. Mejoras de arquitectura
-- Path aliases en vez de rutas relativas: configurá en tsconfig.json los alias @pages/*,
-  @data/*, @fixtures/* y @utils/*, y usalos OBLIGATORIAMENTE en todos los imports
-  (nada de ../../pages/login.page).
-- Faker para datos dinámicos: los datos del formulario de compra/checkout (nombre, apellido,
-  código postal) se generan con @faker-js/faker, no se fijan en el JSON.
-- Clases Actions y Assertions en /utils: centralizá las interacciones comunes (completar
-  campo, click, seleccionar) en utils/actions.ts y las validaciones web-first reutilizables
-  (visible, texto, URL, con su mensaje) en utils/assertions.ts. Pages y tests las reutilizan
-  en vez de repetir esa lógica.
+8. Path aliases
+- Configurá en tsconfig.json (campo paths) los alias @pages/*, @fixtures/*, @helpers/* y
+  @data (apunta a test-data/index.ts), y usalos OBLIGATORIAMENTE en los imports entre
+  carpetas (nada de ../pages/login.page). Los imports dentro de la misma carpeta pueden
+  ser relativos (./base.page).
 
 9. Salida
 - Mostrá primero el árbol de carpetas y después cada archivo completo. Sin placeholders ni "...".
@@ -160,9 +154,9 @@ Creá la estructura del proyecto:
 - Árbol de carpetas completo.
 - package.json con versiones EXACTAS (sin ^ ni ~):
     @playwright/test 1.62.0 (la misma versión de Playwright que nuestro repo)
-    allure-playwright, dotenv, @faker-js/faker, typescript y @types/node en su última
-    versión estable.
-  Scripts: test, test:headed, test:smoke, test:regression, report, lint, typecheck.
+    allure-playwright, dotenv, typescript y @types/node en su última versión estable.
+  Scripts: test, test:headed, test:smoke, test:regression, test:ci, report, lint, typecheck.
+  Campo "engines": { "node": ">=22.18" }.
 - Control automático de calidad: ESLint (flat config) con typescript-eslint y
   eslint-plugin-playwright usando su configuración recomendada, y además como error:
   playwright/no-wait-for-timeout, playwright/no-force-option, playwright/missing-playwright-await,
@@ -174,8 +168,8 @@ Creá la estructura del proyecto:
 - playwright.config.ts: baseURL desde process.env.BASE_URL, testIdAttribute 'data-test',
   proyecto chromium, reporters [['html'], ['allure-playwright', { resultsDir: 'allure-results' }]],
   y las reglas de trace/screenshot/video/retries.
-- tsconfig.json (strict) con baseUrl y paths para los alias @pages/*, @data/*, @fixtures/*
-  y @utils/*, .env.example, .gitignore (node_modules, test-results,
+- tsconfig.json (strict) con paths para los alias @pages/*, @fixtures/*, @helpers/* y @data,
+  .env.example, .gitignore (node_modules, test-results,
   playwright-report, allure-results, allure-report, .env).
 - README corto: instalar con npm ci, instalar navegadores, ejecutar todo, ejecutar por tag, y
   una nota de que armar el reporte necesita el CLI de Allure (no viene con el proyecto).
@@ -190,8 +184,7 @@ performance_glitch_user):
 - test-data/users.json: standard, lockedOut, invalid, performanceGlitch. La contraseña NO va
   en el JSON: se toma de process.env.SAUCE_PASSWORD (excepto la del usuario inválido, que es
   un dato de prueba).
-- test-data/checkout.json: solo el producto. Nombre, apellido y código postal se generan
-  con @faker-js/faker en una función tipada del loader (ej. generarDatosCheckout()).
+- test-data/checkout.json: nombre, apellido, código postal y producto.
 - test-data/messages.json: título del inventario, errores de login y confirmación de compra,
   con el texto EXACTO que muestra el sitio.
 - test-data/index.ts: interfaces + export tipado, y que falle con un error claro si falta
@@ -202,8 +195,7 @@ Mostrame los datos resultantes para revisarlos antes de seguir.
 ## Prompt 3 — Page Objects
 
 ```text
-Generá primero utils/actions.ts y utils/assertions.ts, y después BasePage y los Page
-Objects, que usan Actions para interactuar (todos los imports con alias @):
+Generá BasePage y los Page Objects (imports entre carpetas con alias @):
 - LoginPage: abrir(), escribirUsuario, escribirClave, clickLogin, mensajeError (locator).
 - InventarioPage: titulo (locator), agregarProductoAlCarrito(nombre), irAlCarrito.
 - CarritoPage: productos (locator), clickCheckout.
@@ -218,8 +210,8 @@ con todas las pages inyectadas.
 ## Prompt 4 — Tests
 
 ```text
-Escribí los tests usando SOLO las fixtures, el helper de login, test-data y utils/assertions
-(imports con alias @):
+Escribí los tests usando SOLO las fixtures, el helper de login y test-data
+(imports entre carpetas con alias @):
 - tests/login.spec.ts: TC01 exitoso (standard y performanceGlitch), TC02 bloqueado,
   TC03 inválido. Los negativos se generan con un loop sobre los datos.
 - tests/compra.spec.ts: TC04 de punta a punta.
@@ -250,8 +242,7 @@ del Prompt 0. Devolvé una tabla: Archivo | Línea | Regla incumplida | Correcci
 Revisá en especial: literales hardcodeados (URLs, usuarios, contraseñas, mensajes, timeouts),
 waitForTimeout o setTimeout, force: true, XPath o CSS frágil, aserciones dentro de pages,
 `new Page(...)` en tests, tests que dependen de otros, expect sin mensaje, tipos `any`,
-imports con rutas relativas en vez de alias, datos de checkout fijos en vez de Faker e
-interacciones o validaciones duplicadas que deberían estar en utils/actions o utils/assertions.
+e imports entre carpetas con rutas relativas en vez de alias.
 Después aplicá las correcciones y devolvé solo los archivos modificados.
 ```
 
@@ -276,6 +267,8 @@ No agregues esperas, reintentos ni cambies la aserción para ocultar el problema
 Repetí hasta que quede en verde, salvo TC05, que debe seguir fallando (falla a propósito). Confirmá que se generó `allure-results/` con un resultado por caso.
 
 ## Prompt 7 — Análisis de resultados (entregable 4)
+
+> Este paso no es parte de armar el proyecto: se ejecuta después, con el insumo que genera `npm run insumo`.
 
 Primero armá el insumo para la IA a partir de una corrida completa:
 
@@ -331,7 +324,6 @@ Guardá la respuesta de la IA como insumo del documento (entregable 4) y anotá 
 | 4 Tests |  |  |
 | 5 Revisión |  |  |
 | 6 Ejecución y corrección |  |  |
-| 7 Análisis de resultados |  |  |
 | **Total** |  |  |
 
 > La estimación sin IA hacela antes de arrancar cada paso, así no te influye el resultado.
@@ -348,23 +340,24 @@ Guardá la respuesta de la IA como insumo del documento (entregable 4) y anotá 
 
 ---
 
-## Qué le pasás al equipo
+## Entregables
 
-| Para | Qué |
-|------|-----|
-| Allure (entregable 2) | Proyecto que corre con un comando y genera `allure-results/` |
-| Prompts (entregable 3) | Esta guía con los prompts **tal como los usaste** |
-| Documento (entregable 4) | El análisis de resultados del Prompt 7 (con `resultados/insumo-analisis.md`), el Registro de correcciones, el Registro de tiempos, el `git log --oneline` y qué generó bien la IA sin tocar nada |
+| Entregable | De dónde sale |
+|------------|---------------|
+| 1. Proyecto funcionando | Este repositorio |
+| 2. Reporte Allure | `allure-results/`, que se genera en cada ejecución |
+| 3. Prompts | Esta guía, con los prompts tal como se usaron |
+| 4. Análisis y documento | `resultados/insumo-analisis.md` (`npm run insumo`) con el Prompt 7, más el Registro de correcciones, el Registro de tiempos, el `git log --oneline` y qué generó bien la IA sin tocar nada |
 
 ## Checklist de entrega
 
 - [ ] `npm ci && npx playwright install chromium && npx playwright test` corre en verde en una carpeta limpia
 - [ ] TC01–TC04 (+ performance_glitch_user) en verde y TC05 fallando en el paso 04 (falla a propósito)
-- [ ] `npm run insumo` genera `resultados/insumo-analisis.md` y el análisis del Prompt 7 está guardado
+- [ ] `npm run insumo` genera `resultados/insumo-analisis.md` (insumo del Prompt 7)
 - [ ] `npm run lint` y `npm run typecheck` sin errores (y sin `eslint-disable`)
 - [ ] Búsqueda sin resultados de `waitForTimeout`, `setTimeout`, `force: true` y `secret_sauce` en `pages/` y `tests/`
-- [ ] Búsqueda sin resultados de imports relativos (`from '../`) en `pages/`, `tests/`, `fixtures/`, `helpers/` y `utils/`
-- [ ] Datos de checkout generados con Faker; interacciones y validaciones comunes en `utils/actions.ts` y `utils/assertions.ts`
+- [ ] Búsqueda sin resultados de imports relativos entre carpetas (`from '../`) en `pages/`, `tests/`, `fixtures/` y `helpers/`
+- [ ] `npm run test:ci` (que excluye `@known-bug`) termina en verde
 - [ ] Commits `ia:` y `fix manual:` por cada paso; Registro de tiempos completo
 - [ ] `allure-results/` se genera en cada ejecución
 - [ ] `package-lock.json` versionado; repo o `.zip` sin `node_modules`, reportes ni `.env`
