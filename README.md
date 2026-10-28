@@ -177,3 +177,31 @@ la IA con el Prompt 7 de [Docs/PROMPTS-POC.md](Docs/PROMPTS-POC.md).
 
 Cada ejecución genera `allure-results/`. Para armar y abrir el reporte (`npm run report`) se necesita el
 [CLI de Allure](https://allurereport.org/docs/install/) instalado aparte: no viene con el proyecto.
+
+## Mejoras a futuro
+
+Propuestas evaluadas que no se aplicaron en la POC porque no cambian qué se prueba en SauceDemo, pero suman cuando
+el proyecto crezca.
+
+### Datos dinámicos con Faker
+
+`@faker-js/faker` genera datos distintos en cada corrida. En SauceDemo no aporta: el checkout acepta cualquier texto.
+Conviene sumarlo cuando haya formularios con validaciones reales (emails, teléfonos, nombres con tildes o muy largos)
+o tests que crean entidades únicas y corren en paralelo. Condiciones para usarlo:
+
+- **Semilla fija** (`faker.seed(...)`) para que una falla se pueda reproducir con los mismos datos.
+- **Valores registrados en el reporte** (por ejemplo, adjuntos en Allure) para saber con qué datos falló.
+- Usuarios, mensajes esperados y rutas siguen en `test-data/`.
+
+### Reutilización sin clases `actions` / `assertions`
+
+Se descartó centralizar interacciones y validaciones en clases `actions` y `assertions` dentro de `utils/`: `actions`
+duplica lo que ya hacen los Page Objects, y `assertions` saca los `expect` del test (que deja de mostrar qué valida y
+choca con la regla `playwright/expect-expect`). Las alternativas que respetan el POM son:
+
+| Necesidad | Dónde va | Ejemplo |
+|-----------|----------|---------|
+| Validación compleja que se repite | Matcher propio con `expect.extend` | `await expect(carritoPage).toTenerProductosEnCarrito(1)` |
+| Partes de pantalla compartidas | Componente dentro del POM (`pages/components/`) | `HeaderComponent` con `irAlCarrito()`, incluido en cada page |
+| Precondiciones repetidas | Fixture de estado con `storageState` | Fixture `usuarioLogueado` que arranca la sesión sin pasar por el login |
+| Secuencias de varios pasos | `helpers/` (ya existe) | `iniciarSesion`, un futuro `completarCompra(producto, cliente)` |
