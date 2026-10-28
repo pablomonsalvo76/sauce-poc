@@ -12,6 +12,6 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules", "test-results", "playwright-report", "allure-results", "allure-report"]
+  "include": ["**/*.ts", "scripts/**/*.mts"],
+  "exclude": ["node_modules", "test-results", "playwright-report", "allure-results", "allure-report", "resultados"]
 }

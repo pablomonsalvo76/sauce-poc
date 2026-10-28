@@ -32,6 +32,7 @@ export interface Mensajes {
     lockedOut: string;
     invalidCredentials: string;
   };
+  checkoutOverviewTitle: string;
   orderConfirmation: string;
 }
 
@@ -76,9 +77,10 @@ export const usuarios: Record<keyof typeof usersJson, Usuario> = {
   lockedOut: { ...usersJson.lockedOut, password: env.sauceClave },
   invalid: usersJson.invalid,
   performanceGlitch: { ...usersJson.performanceGlitch, password: env.sauceClave },
+  problem: { ...usersJson.problem, password: env.sauceClave },
 };
 
-/** Datos del cliente y producto para la compra (TC04). */
+/** Datos del cliente y producto para la compra (TC04, TC05). */
 export const checkout: DatosCheckout = checkoutJson;
 
 /** Textos esperados en las validaciones. */

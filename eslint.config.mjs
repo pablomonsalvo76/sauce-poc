@@ -5,10 +5,13 @@ import tseslint from 'typescript-eslint';
 
 export default defineConfig(
   {
-    ignores: ['node_modules/', 'test-results/', 'playwright-report/', 'allure-results/', 'allure-report/'],
+    ignores: ['.claude/', 'node_modules/', 'test-results/', 'playwright-report/', 'allure-results/', 'allure-report/', 'resultados/'],
   },
   js.configs.recommended,
   tseslint.configs.recommended,
+  {
+    languageOptions: { parserOptions: { tsconfigRootDir: import.meta.dirname } },
+  },
   {
     files: ['tests/**/*.ts', 'pages/**/*.ts', 'fixtures/**/*.ts', 'helpers/**/*.ts'],
     ...playwright.configs['flat/recommended'],
@@ -19,6 +22,7 @@ export default defineConfig(
       'playwright/missing-playwright-await': 'error',
       'playwright/no-element-handle': 'error',
       'playwright/prefer-web-first-assertions': 'error',
+      'playwright/expect-expect': ['warn', { assertFunctionNames: ['comprarDePuntaAPunta'] }],
     },
   },
 );
